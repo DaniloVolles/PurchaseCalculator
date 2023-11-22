@@ -99,28 +99,77 @@ fun ModalBottomSheetForm() {
 @Composable
 fun FormSheet() {
 
+    var where by remember { mutableStateOf("") }
+    var which by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        OutlinedTextField(
-            price,
-            { price = it },
-            Modifier.padding(16.dp)
-        )
-        OutlinedTextField(
-            amount,
-            { amount = it },
-            Modifier.padding(16.dp)
-        )
-        TypeDropDownMenu(
+    Column {
 
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            OutlinedTextField(
+                value = where,
+                onValueChange = {
+                    if (it.length <= 20) {
+                        price = it
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f),
+                label = { Text("Onde") },
+                supportingText = { Text("Opcional")}
+            )
+            OutlinedTextField(
+                value = which,
+                onValueChange = {
+                    if (it.length <= 20){
+                        price = it
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f),
+                label = { Text("Produto") },
+                supportingText = { Text("Opcional")}
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            OutlinedTextField(
+                value = price,
+                onValueChange = {
+                    if (it.length <= 10) { // Only 10 digit input
+                        price = it
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(4f),
+                label = { Text("Valor") }
+
+            )
+            OutlinedTextField(
+                amount,
+                { amount = it },
+                Modifier
+                    .padding(16.dp)
+                    .weight(3f),
+                label = { Text("Quant.") }
+            )
+            TypeDropDownMenu(
+
+            )
+        }
     }
+
 }
 
 @Composable
@@ -131,9 +180,10 @@ fun TypeDropDownMenu() {
 
 
 }
-@Preview
+
+@Preview(backgroundColor = 0xFFFFFFFF)
 @Composable
-fun PreviewDropDownMenu(){
+fun PreviewDropDownMenu() {
     TypeDropDownMenu()
 }
 
