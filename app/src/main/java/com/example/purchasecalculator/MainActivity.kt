@@ -3,7 +3,6 @@
 package com.example.purchasecalculator
 
 import android.os.Bundle
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +26,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,10 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 class MainActivity : ComponentActivity() {
@@ -107,40 +106,43 @@ fun FormSheet() {
     Column {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, start = 16.dp, end = 16.dp, bottom = 0.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             OutlinedTextField(
                 value = where,
                 onValueChange = {
                     if (it.length <= 20) {
-                        price = it
+                        where = it
                     }
                 },
                 modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f),
+                    .weight(1f)
+                    .padding(4.dp),
                 label = { Text("Onde") },
-                supportingText = { Text("Opcional")}
+                supportingText = { Text("Opcional") }
             )
             OutlinedTextField(
                 value = which,
                 onValueChange = {
-                    if (it.length <= 20){
-                        price = it
+                    if (it.length <= 20) {
+                        which = it
                     }
                 },
                 modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f),
+                    .weight(1f)
+                    .padding(4.dp),
                 label = { Text("Produto") },
-                supportingText = { Text("Opcional")}
+                supportingText = { Text("Opcional") }
             )
         }
 
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             OutlinedTextField(
@@ -151,22 +153,85 @@ fun FormSheet() {
                     }
                 },
                 modifier = Modifier
-                    .padding(16.dp)
-                    .weight(4f),
-                label = { Text("Valor") }
+                    .weight(4f)
+                    .padding(4.dp),
+                label = { Text("Valor") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
 
             )
             OutlinedTextField(
                 amount,
                 { amount = it },
                 Modifier
-                    .padding(16.dp)
-                    .weight(3f),
-                label = { Text("Quant.") }
+                    .weight(4f)
+                    .padding(4.dp),
+                label = { Text("Quant.") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            TypeDropDownMenu(
 
+            var expanded by remember { mutableStateOf(false) }
+            val list = listOf("L", "g", "un.", "m")
+            var selectedItem by remember { mutableStateOf(list[0]) }
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+                Modifier
+                    .weight(3f)
+                    .padding(4.dp),
+            ) {
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    onValueChange = {},
+                    readOnly = false,
+                    value = selectedItem,
+                    label = { Text("Tipo") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    list.forEach { selectedOption ->
+                        DropdownMenuItem(
+                            text = { Text(selectedOption) },
+                            onClick = {
+                                selectedItem = selectedOption
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                        )
+                    }
+                }
+            }
+
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, bottom = 64.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                text = "R$ 0 /L",
+                fontSize = 28.sp
             )
+            Button(
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "calcular", fontSize = 16.sp)
+            }
+            Button(
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "salvar", fontSize = 16.sp)
+            }
         }
     }
 
@@ -174,10 +239,6 @@ fun FormSheet() {
 
 @Composable
 fun TypeDropDownMenu() {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf("") }
-    var list = listOf("1", "2", "3")
-
 
 }
 
