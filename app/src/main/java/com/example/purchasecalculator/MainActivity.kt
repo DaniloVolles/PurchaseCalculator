@@ -99,7 +99,7 @@ fun ModalBottomSheetForm() {
 @Composable
 fun FormSheet() {
 
-    var where by remember { mutableStateOf("") }
+    var store by remember { mutableStateOf("") }
     var which by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
@@ -113,16 +113,16 @@ fun FormSheet() {
             horizontalArrangement = Arrangement.SpaceAround,
         ) {
             OutlinedTextField(
-                value = where,
+                value = store,
                 onValueChange = {
                     if (it.length <= 20) {
-                        where = it
+                        store = it
                     }
                 },
                 modifier = Modifier
                     .weight(1f)
                     .padding(4.dp),
-                label = { Text("Onde") },
+                label = { Text("Loja") },
                 supportingText = { Text("Opcional") }
             )
             OutlinedTextField(
@@ -189,7 +189,7 @@ fun FormSheet() {
                     onValueChange = {},
                     readOnly = false,
                     value = selectedItem,
-                    label = { Text("Tipo") },
+                    label = { Text("Medida") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
                 )
