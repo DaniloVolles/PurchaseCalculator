@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PurchaseCalculator</string>
+    <string name="title_activity_inclusion_form">InclusionForm</string>
 </resources>

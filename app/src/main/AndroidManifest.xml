@@ -13,6 +13,11 @@
         android:theme="@style/Theme.PurchaseCalculator"
         tools:targetApi="31">
         <activity
+            android:name=".InclusionForm"
+            android:exported="false"
+            android:label="@string/title_activity_inclusion_form"
+            android:theme="@style/Theme.PurchaseCalculator" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

@@ -100,7 +100,7 @@ fun ModalBottomSheetForm() {
 fun FormSheet() {
 
     var store by remember { mutableStateOf("") }
-    var which by remember { mutableStateOf("") }
+    var product by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
@@ -126,10 +126,10 @@ fun FormSheet() {
                 supportingText = { Text("Opcional") }
             )
             OutlinedTextField(
-                value = which,
+                value = product,
                 onValueChange = {
                     if (it.length <= 20) {
-                        which = it
+                        product = it
                     }
                 },
                 modifier = Modifier
@@ -223,6 +223,11 @@ fun FormSheet() {
                 text = "R$ 0 /L",
                 fontSize = 28.sp
             )
+            Button(
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "limpar", fontSize = 16.sp)
+            }
             Button(
                 onClick = { /*TODO*/ }
             ) {
