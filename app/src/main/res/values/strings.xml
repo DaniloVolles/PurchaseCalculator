@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">PurchaseCalculator</string>
     <string name="title_activity_inclusion_form">InclusionForm</string>
+
+    <string name="type_liter">L</string>
+    <string name="type_gram">g</string>
+    <string name="type_unit">un.</string>
+    <string name="type_meter">m</string>
 </resources>

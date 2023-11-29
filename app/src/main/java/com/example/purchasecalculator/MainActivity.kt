@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
+import com.example.purchasecalculator.util.PriceCalculator
 
 
 class MainActivity : ComponentActivity() {
@@ -220,7 +221,7 @@ fun FormSheet() {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "R$ 0 /L",
+                text = (PriceCalculator(price.toDouble(), amount.toDouble())).toString(),
                 fontSize = 28.sp
             )
             Button(
