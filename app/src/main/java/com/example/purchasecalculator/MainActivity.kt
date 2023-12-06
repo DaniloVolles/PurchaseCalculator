@@ -104,6 +104,7 @@ fun FormSheet() {
     var product by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
+    var pricePerUnit by remember { mutableStateOf("") }
 
     Column {
 
@@ -221,7 +222,7 @@ fun FormSheet() {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = (PriceCalculator(price.toDouble(), amount.toDouble())).toString(),
+                text = (pricePerUnit),
                 fontSize = 28.sp
             )
             Button(
@@ -230,9 +231,12 @@ fun FormSheet() {
                 Text(text = "limpar", fontSize = 16.sp)
             }
             Button(
-                onClick = { /*TODO*/ }
+                onClick = { pricePerUnit = math(price, amount) }
             ) {
-                Text(text = "calcular", fontSize = 16.sp)
+                Text(
+                    text = "calcular",
+                    fontSize = 16.sp
+                )
             }
             Button(
                 onClick = { /*TODO*/ }
@@ -242,6 +246,12 @@ fun FormSheet() {
         }
     }
 
+}
+
+fun math(price: String, amount: String): String {
+    val priceDouble = price.toDouble()
+    val amountDouble = amount.toDouble()
+    return (priceDouble/amountDouble).toString()
 }
 
 @Composable
