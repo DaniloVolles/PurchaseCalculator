@@ -225,34 +225,29 @@ fun FormSheet() {
                 text = (pricePerUnit),
                 fontSize = 28.sp
             )
+//            Button(
+//                onClick = { /*TODO*/ }
+//            ) {
+//                Text(text = "limpar", fontSize = 16.sp)
+//            }
             Button(
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = "limpar", fontSize = 16.sp)
-            }
-            Button(
-                onClick = { pricePerUnit = math(price, amount) }
+                onClick = { pricePerUnit = PriceCalculator.calculatePricePerUnit(price, amount) }
             ) {
                 Text(
                     text = "calcular",
                     fontSize = 16.sp
                 )
             }
-            Button(
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = "salvar", fontSize = 16.sp)
-            }
+//            Button(
+//                onClick = { /*TODO*/ }
+//            ) {
+//                Text(text = "salvar", fontSize = 16.sp)
+//            }
         }
     }
 
 }
 
-fun math(price: String, amount: String): String {
-    val priceDouble = price.toDouble()
-    val amountDouble = amount.toDouble()
-    return (priceDouble/amountDouble).toString()
-}
 
 @Composable
 fun TypeDropDownMenu() {
