@@ -6,4 +6,5 @@
     <string name="type_gram">g</string>
     <string name="type_unit">un.</string>
     <string name="type_meter">m</string>
+    <string name="title_activity_form">FormActivity</string>
 </resources>

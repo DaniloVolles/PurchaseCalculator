@@ -2,49 +2,39 @@
 
 package com.example.purchasecalculator
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.purchasecalculator.constants.Constants
+import com.example.purchasecalculator.model.Product
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
-import com.example.purchasecalculator.util.PriceCalculator
 
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -55,230 +45,90 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    ModalBottomSheetForm()
+//                    ProductList()
+                    FloatingActionButton()
 
                 }
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ModalBottomSheetForm() {
-    val sheetState = rememberModalBottomSheetState()
-    var isFormOpen by rememberSaveable {
-        mutableStateOf(false)
-    }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        Alignment.BottomEnd
-    ) {
-        FloatingActionButton(
-            onClick = { isFormOpen = true },
-            modifier = Modifier.padding(32.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-    }
-    if (isFormOpen) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = { isFormOpen = false }
-        ) {
-            FormSheet()
-        }
-    }
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormSheet() {
-
-    var store by remember { mutableStateOf("") }
-    var product by remember { mutableStateOf("") }
-    var price by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var pricePerUnit by remember { mutableStateOf("") }
-
+fun ProductList(product: List<Product>) {
     Column {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp, start = 16.dp, end = 16.dp, bottom = 0.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-        ) {
-            OutlinedTextField(
-                value = store,
-                onValueChange = {
-                    if (it.length <= 20) {
-                        store = it
-                    }
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(4.dp),
-                label = { Text("Loja") },
-                supportingText = { Text("Opcional") }
-            )
-            OutlinedTextField(
-                value = product,
-                onValueChange = {
-                    if (it.length <= 20) {
-                        product = it
-                    }
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(4.dp),
-                label = { Text("Produto") },
-                supportingText = { Text("Opcional") }
-            )
+        product.forEach { product ->
+            ProductRow(product)
         }
+    }
+}
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+@Composable
+fun ProductRow(product: Product) {
+
+    val store = product.store
+    val name = product.name
+    val value = product.value
+    val quantity = product.quantity
+    val type = product.type
+    val pricePerUnit = "R$4.33 "
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Column(
+            Modifier
+                .weight(3f)
         ) {
-            OutlinedTextField(
-                value = price,
-                onValueChange = {
-                    if (it.length <= 10) { // Only 10 digit input
-                        price = it
-                    }
-                },
-                modifier = Modifier
-                    .weight(4f)
-                    .padding(4.dp),
-                label = { Text("Valor") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-
-            )
-            OutlinedTextField(
-                amount,
-                { amount = it },
-                Modifier
-                    .weight(4f)
-                    .padding(4.dp),
-                label = { Text("Quant.") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-
-            var expanded by remember { mutableStateOf(false) }
-            val list = listOf("L", "g", "un.", "m")
-            var selectedItem by remember { mutableStateOf(list[0]) }
-
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                Modifier
-                    .weight(3f)
-                    .padding(4.dp),
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    onValueChange = {},
-                    readOnly = false,
-                    value = selectedItem,
-                    label = { Text("Medida") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    list.forEach { selectedOption ->
-                        DropdownMenuItem(
-                            text = { Text(selectedOption) },
-                            onClick = {
-                                selectedItem = selectedOption
-                                expanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                        )
-                    }
-                }
+                Text(text = name)
+                Text(text = type.toString())
+            }
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = store)
+                Text(text = value.toString())
+                Text(text = quantity.toString())
             }
 
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, bottom = 64.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+        Column(
+            Modifier
+                .weight(1f),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = (pricePerUnit),
-                fontSize = 28.sp
-            )
-//            Button(
-//                onClick = { /*TODO*/ }
-//            ) {
-//                Text(text = "limpar", fontSize = 16.sp)
-//            }
-            Button(
-                onClick = { pricePerUnit = PriceCalculator.calculatePricePerUnit(price, amount) }
-            ) {
-                Text(
-                    text = "calcular",
-                    fontSize = 16.sp
-                )
-            }
-//            Button(
-//                onClick = { /*TODO*/ }
-//            ) {
-//                Text(text = "salvar", fontSize = 16.sp)
-//            }
+            Text(text = pricePerUnit)
         }
     }
 
 }
 
-
+@Preview(showBackground = true)
 @Composable
-fun TypeDropDownMenu() {
-
-}
-
-@Preview(backgroundColor = 0xFFFFFFFF)
-@Composable
-fun PreviewDropDownMenu() {
-    TypeDropDownMenu()
+fun PreviewProductRow() {
+    ProductRow(Product("Assaí", "Coca-Cola", 12.99, 3.0, Constants.PRODUCT.TYPE.LITERS))
 }
 
 @Composable
-@Preview
-fun PreviewFormSheet() {
-    FormSheet()
-}
+fun FloatingActionButton() {
 
-@Composable
-@Preview
-fun PreviewModalBottomSheetForm() {
-    ModalBottomSheetForm()
-}
+    val activity = LocalContext.current
 
-@Composable
-fun Btn_OpenForm() {
-    Button(
-        onClick = { },
+    FloatingActionButton(
+        onClick = { activity.startActivity(Intent(activity, FormActivity::class.java)) },
         modifier = Modifier
-            .size(16.dp)
-            .padding(16.dp)
+            .padding(32.dp)
+            .wrapContentSize()
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_add),
@@ -286,4 +136,10 @@ fun Btn_OpenForm() {
             modifier = Modifier.size(24.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewFloatingActionButton() {
+    FloatingActionButton()
 }
