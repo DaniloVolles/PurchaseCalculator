@@ -94,7 +94,9 @@ fun ProductRow(product: Product) {
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = store)
+                if (store != null) {
+                    Text(text = store)
+                }
                 Text(text = value.toString())
                 Text(text = quantity.toString())
             }
@@ -116,7 +118,16 @@ fun ProductRow(product: Product) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewProductRow() {
-    ProductRow(Product("Assaí", "Coca-Cola", 12.99, 3.0, Constants.PRODUCT.TYPE.LITERS))
+    ProductRow(
+        Product(
+            108,
+            "Assaí",
+            "Coca-Cola",
+            12.99,
+            3.0,
+            Constants.PRODUCT.TYPE.LITERS
+        )
+    )
 }
 
 @Composable

@@ -2,6 +2,7 @@ package com.example.purchasecalculator.constants
 
 class Constants private constructor() {
     object DATA_BASE {
+
         const val ID = "product_id"
         const val TABLE_NAME = "products"
 

@@ -26,14 +26,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
 import com.example.purchasecalculator.util.PriceCalculator
+import com.example.purchasecalculator.viewModel.InclusionFormViewModel
 
 class FormActivity : ComponentActivity() {
+
+    private lateinit var viewModel: InclusionFormViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[InclusionFormViewModel::class.java]
+
         setContent {
             PurchaseCalculatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -52,10 +61,14 @@ class FormActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormSheet() {
+
+    lateinit var viewModel: InclusionFormViewModel
+
     var store by remember { mutableStateOf("") }
     var product by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf("") }
     var pricePerUnit by remember { mutableStateOf("") }
 
     Column {
@@ -126,7 +139,7 @@ fun FormSheet() {
 
             var expanded by remember { mutableStateOf(false) }
             val list = listOf("L", "g", "un.", "m")
-            var selectedItem by remember { mutableStateOf(list[0]) }
+            var type by remember { mutableStateOf(list[0]) }
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -137,12 +150,13 @@ fun FormSheet() {
             ) {
 
                 OutlinedTextField(
+
+                    value = type,
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor(),
                     onValueChange = {},
                     readOnly = false,
-                    value = selectedItem,
                     label = { Text("Medida") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
@@ -156,7 +170,7 @@ fun FormSheet() {
                         DropdownMenuItem(
                             text = { Text(selectedOption) },
                             onClick = {
-                                selectedItem = selectedOption
+                                type = selectedOption
                                 expanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -188,7 +202,9 @@ fun FormSheet() {
                 )
             }
             Button(
-                onClick = { /*TODO*/ }
+                onClick = {
+                    viewModel.insert(1, store, product, price.toDouble(), amount.toDouble(), type)
+                }
             ) {
                 Text(text = "salvar", fontSize = 16.sp)
             }
@@ -207,4 +223,14 @@ fun FormSheet() {
         }
     }
 
+}
+
+fun saveButton () {
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewFormSheet (){
+    FormSheet()
 }
