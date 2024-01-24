@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import com.example.purchasecalculator.model.Product
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
 import com.example.purchasecalculator.util.PriceCalculator
 import com.example.purchasecalculator.viewModel.InclusionFormViewModel
@@ -65,7 +66,7 @@ fun FormSheet() {
     lateinit var viewModel: InclusionFormViewModel
 
     var store by remember { mutableStateOf("") }
-    var product by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var type by remember { mutableStateOf("") }
@@ -93,10 +94,10 @@ fun FormSheet() {
                 supportingText = { Text("Opcional") }
             )
             OutlinedTextField(
-                value = product,
+                value = name,
                 onValueChange = {
                     if (it.length <= 20) {
-                        product = it
+                        name = it
                     }
                 },
                 modifier = Modifier
@@ -189,7 +190,7 @@ fun FormSheet() {
         ) {
 
             Button(
-                onClick = { price = ""; amount = ""; store = ""; product = ""; pricePerUnit = "" }
+                onClick = { price = ""; amount = ""; store = ""; name = ""; pricePerUnit = "" }
             ) {
                 Text(text = "limpar", fontSize = 16.sp)
             }
@@ -203,7 +204,8 @@ fun FormSheet() {
             }
             Button(
                 onClick = {
-                    viewModel.insert(1, store, product, price.toDouble(), amount.toDouble(), type)
+                    val product = Product(0, store, name, price.toDouble(), amount.toDouble(), type)
+                    viewModel.insert(product)
                 }
             ) {
                 Text(text = "salvar", fontSize = 16.sp)

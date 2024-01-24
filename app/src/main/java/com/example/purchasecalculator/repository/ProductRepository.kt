@@ -61,13 +61,7 @@ class ProductRepository private constructor(context: Context) {
             val args = arrayOf(id.toString())
 
             val cursor = db.query(
-                TABLE_NAME,
-                projection,
-                selection,
-                args,
-                null,
-                null,
-                null
+                TABLE_NAME, projection, selection, args, null, null, null
             )
 
             if (cursor != null && cursor.count > 0) {
@@ -84,13 +78,49 @@ class ProductRepository private constructor(context: Context) {
             }
             cursor?.close()
             product
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             product
         }
     }
 
+    @SuppressLint("Range")
     fun getAll(): List<Product> {
-        TODO("Not yet implemented")
+        val list = mutableListOf<Product>()
+        try {
+            val db = productDataBase.readableDatabase
+
+            val projection = arrayOf(ID, NAME, STORE, VALUE, QUANTITY, TYPE)
+
+            val cursor = db.query(
+                TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()) {
+
+                    val id = cursor.getInt(cursor.getColumnIndex(ID))
+                    val name = cursor.getString(cursor.getColumnIndex(NAME))
+                    val store = cursor.getString(cursor.getColumnIndex(STORE))
+                    val value = cursor.getDouble(cursor.getColumnIndex(VALUE))
+                    val quantity = cursor.getDouble(cursor.getColumnIndex(QUANTITY))
+                    val type = cursor.getString(cursor.getColumnIndex(TYPE))
+
+                    list.add(Product(id, store, name, value, quantity, type))
+
+                }
+            }
+
+            cursor.close()
+        } catch (e: Exception) {
+            return list
+        }
+        return list
     }
 
     fun update() {

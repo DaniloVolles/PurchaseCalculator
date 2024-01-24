@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.purchasecalculator.constants.Constants
 import com.example.purchasecalculator.model.Product
+import com.example.purchasecalculator.model.ProductMock
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
 
 
@@ -38,30 +41,58 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PurchaseCalculatorTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-
-//                    ProductList()
-                    FloatingActionButton()
-
-                }
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
+            ) {
+                ProductList(ProductMock.productList)
+                FloatingActionButton()
             }
+
+//            PurchaseCalculatorTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//
+////                    ProductList()
+//                    FloatingActionButton()
+//
+//                }
+//            }
         }
     }
 
 }
 
 @Composable
-fun ProductList(product: List<Product>) {
-    Column {
-        product.forEach { product ->
-            ProductRow(product)
+fun ProductList(products: List<Product>) {
+    Surface (Modifier.fillMaxSize()){
+        LazyColumn {
+            items(products){
+                ProductRow(product = it)
+            }
         }
+        FloatingActionButton()
     }
+}
+
+@Composable
+fun ProductRowMock() {
+
+    val product = Product(
+        108,
+        "Assaí",
+        "Coca-Cola",
+        12.99,
+        3.0,
+        Constants.PRODUCT.TYPE.LITERS
+    )
+    ProductRow(product)
 }
 
 @Composable
@@ -104,10 +135,7 @@ fun ProductRow(product: Product) {
         }
 
         Column(
-            Modifier
-                .weight(1f),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
+            Modifier.weight(1f)
         ) {
             Text(text = pricePerUnit)
         }
@@ -118,16 +146,7 @@ fun ProductRow(product: Product) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewProductRow() {
-    ProductRow(
-        Product(
-            108,
-            "Assaí",
-            "Coca-Cola",
-            12.99,
-            3.0,
-            Constants.PRODUCT.TYPE.LITERS
-        )
-    )
+    ProductRowMock()
 }
 
 @Composable
