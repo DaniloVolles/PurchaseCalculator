@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.purchasecalculator
 
 import android.annotation.SuppressLint
@@ -48,11 +46,6 @@ class MainActivity : ComponentActivity() {
             MyApp(this)
         }
     }
-
-}
-
-@Composable
-fun ProductList(products: List<Product>) {
 
 }
 

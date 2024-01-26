@@ -51,7 +51,7 @@ class FormActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    FormSheet()
+                    FormSheet(viewModel)
                 }
             }
         }
@@ -61,9 +61,7 @@ class FormActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormSheet() {
-
-    lateinit var viewModel: InclusionFormViewModel
+fun FormSheet(viewModel: InclusionFormViewModel) {
 
     var store by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -204,8 +202,7 @@ fun FormSheet() {
             }
             Button(
                 onClick = {
-                    val product = Product(0, store, name, price.toDouble(), amount.toDouble(), type)
-                    viewModel.insert(product)
+                    viewModel.insert(0, store, name, price.toDouble(), amount.toDouble(), type)
                 }
             ) {
                 Text(text = "salvar", fontSize = 16.sp)
@@ -227,12 +224,9 @@ fun FormSheet() {
 
 }
 
-fun saveButton () {
-
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormSheet (){
-    FormSheet()
+    lateinit var viewModel: InclusionFormViewModel
+    FormSheet(viewModel)
 }

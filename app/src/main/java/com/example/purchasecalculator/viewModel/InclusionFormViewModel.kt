@@ -11,14 +11,20 @@ class InclusionFormViewModel (application: Application) : AndroidViewModel(appli
 
     private val repository = ProductRepository.getInstance(application.applicationContext)
 
-    private var _saveProduct = MutableLiveData<Boolean>()
-    val saveProduct: LiveData<Boolean> = _saveProduct
+    private var _insertProduct = MutableLiveData<Boolean>()
+    val saveProduct: LiveData<Boolean> = _insertProduct
 
     private var _product = MutableLiveData<Product>()
     val product: LiveData<Product> = _product
 
-    fun insert(product: Product){
-        _saveProduct.value = repository.insert(product)
+    fun insert(id: Int, store: String?, name: String, price: Double, amount: Double, type: String?){
+        val product = Product(id, store, name, price, amount, type)
+        if (id == 0) {
+            _insertProduct.value = repository.insert(product)
+        } else {
+            TODO()
+//            _saveProduct.value = repository.update(product)
+        }
     }
 
     fun load(id: Int){

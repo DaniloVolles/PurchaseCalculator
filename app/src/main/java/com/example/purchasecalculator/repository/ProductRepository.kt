@@ -9,7 +9,7 @@ import kotlin.Exception
 
 class ProductRepository private constructor(context: Context) {
 
-    private val productDataBase = ProductDataBase(context)
+    private val productDataBase: ProductDataBase = ProductDataBase(context)
 
     val TABLE_NAME = Constants.DATA_BASE.TABLE_NAME
 

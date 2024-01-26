@@ -25,7 +25,11 @@ class ProductDataBase (context: Context) : SQLiteOpenHelper(context, NAME, null,
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATE_TABLE_PRODUCT)
+        try {
+            db.execSQL(CREATE_TABLE_PRODUCT)
+        } catch (e: Exception) {
+            print(e)
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
