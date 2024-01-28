@@ -96,12 +96,14 @@ fun ProductRow(product: Product) {
                 )
             }
             Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                Modifier.fillMaxWidth()
             ) {
                 if (store != null) {
                     Text(text = store)
                 }
+                Text(text = " · $quantity")
+                Text(text = " $type")
+                Text(text = " · R$ $value")
             }
 
         }
