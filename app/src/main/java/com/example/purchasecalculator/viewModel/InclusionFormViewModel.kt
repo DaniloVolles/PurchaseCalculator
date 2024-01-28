@@ -17,7 +17,7 @@ class InclusionFormViewModel (application: Application) : AndroidViewModel(appli
     private var _product = MutableLiveData<Product>()
     val product: LiveData<Product> = _product
 
-    fun insert(id: Int, store: String?, name: String, price: Double, amount: Double, type: String?){
+    fun insert(id: Int, store: String?, name: String, price: Double, amount: Double, type: String){
         val product = Product(id, store, name, price, amount, type)
         if (id == 0) {
             _insertProduct.value = repository.insert(product)

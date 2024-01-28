@@ -72,7 +72,7 @@ fun ProductRow(product: Product) {
     val value = product.value
     val quantity = product.quantity
     val type = product.type
-    val pricePerUnit = "R$4.33 "
+    val pricePerUnit = product.calculatePricePerUnit()
 
     Row(
         Modifier
@@ -84,7 +84,7 @@ fun ProductRow(product: Product) {
     ) {
         Column(
             Modifier
-                .weight(3f)
+                .weight(2f)
         ) {
             Row(
                 Modifier.fillMaxWidth(),
@@ -116,7 +116,7 @@ fun ProductRow(product: Product) {
                 horizontalArrangement = Arrangement.End
             ){
                 Text(
-                    text = pricePerUnit,
+                    text = "R$ $pricePerUnit",
                     fontSize = 24.sp
                 )
             }

@@ -192,7 +192,7 @@ fun FormSheet(viewModel: InclusionFormViewModel) {
                 Text(text = "limpar", fontSize = 16.sp)
             }
             Button(
-                onClick = { pricePerUnit = Product.calculatePricePerUnit(price, amount) }
+                onClick = { pricePerUnit = Product.calculatePricePerUnit(price.toDouble(), amount.toDouble()) }
             ) {
                 Text(
                     text = "calcular",

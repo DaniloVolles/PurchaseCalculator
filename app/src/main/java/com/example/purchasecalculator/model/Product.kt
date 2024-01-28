@@ -5,36 +5,28 @@ import java.lang.NumberFormatException
 
 data class Product(
     val id: Int,
-    val store: String?,
+    val store: String? = null,
     val name: String,
     val value: Double,
     val quantity: Double,
-    val type: String?
+    val type: String
 ) {
-    companion object {
-        fun calculatePricePerUnit(price: String?, amount: String?): String {
-
-            // Check if both values are provided
-            if (price.isNullOrBlank() || amount.isNullOrBlank()) {
+    fun calculatePricePerUnit(): String {
+        return try {
+            if (value == 0.0 || quantity == 0.0) {
                 return "Error: Both values must be provided."
+            } else {
+                val result = value / quantity
+                String.format("%.2f", result)
             }
+        } catch (e: NumberFormatException) {
+            "Error: Make sure to provide valid numeric values."
+        }
+    }
 
-            return try {
-                // Convert strings to doubles after trimming whitespace
-                val priceDouble = price.trim().toDouble()
-                val amountDouble = amount.trim().toDouble()
-
-                // Check for division by zero
-                if (amountDouble == 0.0) {
-                    "Error: Cannot divide by zero."
-                } else {
-                    // Perform the calculation and format the result with two decimal places
-                    val result = priceDouble / amountDouble
-                    String.format("%.2f", result)
-                }
-            } catch (e: NumberFormatException) {
-                "Error: Make sure to provide valid numeric values."
-            }
+    companion object {
+        fun calculatePricePerUnit(value: Double, quantity: Double): String {
+            return (value / quantity).toString()
         }
     }
 }
