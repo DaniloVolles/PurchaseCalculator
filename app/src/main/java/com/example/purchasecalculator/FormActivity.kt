@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.purchasecalculator.model.Product
 import com.example.purchasecalculator.ui.theme.PurchaseCalculatorTheme
-import com.example.purchasecalculator.util.PriceCalculator
 import com.example.purchasecalculator.viewModel.InclusionFormViewModel
 
 class FormActivity : ComponentActivity() {
@@ -193,7 +192,7 @@ fun FormSheet(viewModel: InclusionFormViewModel) {
                 Text(text = "limpar", fontSize = 16.sp)
             }
             Button(
-                onClick = { pricePerUnit = PriceCalculator.calculatePricePerUnit(price, amount) }
+                onClick = { pricePerUnit = Product.calculatePricePerUnit(price, amount) }
             ) {
                 Text(
                     text = "calcular",

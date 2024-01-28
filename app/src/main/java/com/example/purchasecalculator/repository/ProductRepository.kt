@@ -123,12 +123,39 @@ class ProductRepository private constructor(context: Context) {
         return list
     }
 
-    fun update() {
-        TODO("Not yet implemented")
+    fun update(product: Product): Boolean {
+        return try {
+
+            val db = productDataBase.writableDatabase
+
+            val contentValues = ContentValues()
+            contentValues.put(NAME, product.name)
+            contentValues.put(STORE, product.store)
+            contentValues.put(VALUE, product.value)
+            contentValues.put(QUANTITY, product.quantity)
+            contentValues.put(TYPE, product.type)
+
+            val selection = ID + " = ?"
+            val args = arrayOf(product.id.toString())
+
+            db.update(TABLE_NAME, contentValues, selection, args)
+            true
+        } catch (e: Exception){
+            false
+        }
     }
 
-    fun delete(id: Int) {
-        TODO("Not yet implemented")
+    fun delete(id: Int): Boolean {
+        return try {
+            val db = productDataBase.writableDatabase
+            val selection = ID + " = ?"
+            val args = arrayOf(id.toString())
+
+            db.delete(TABLE_NAME, selection, args)
+            true
+        } catch (e: Exception){
+            false
+        }
     }
 }
 

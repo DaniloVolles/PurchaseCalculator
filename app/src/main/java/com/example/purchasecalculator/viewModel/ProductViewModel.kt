@@ -14,8 +14,9 @@ class ProductViewModel(application: Application): AndroidViewModel(application) 
     private val _productList = MutableLiveData<List<Product>>()
     val productList: LiveData<List<Product>> = _productList
 
-    fun getAll() {
+    fun getAll(): List<Product> {
         _productList.value = repository.getAll()
+        return _productList.value!!
     }
 
     fun delete(id: Int){

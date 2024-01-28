@@ -1,6 +1,7 @@
 package com.example.purchasecalculator.model
 
 import com.example.purchasecalculator.constants.Constants
+import java.lang.NumberFormatException
 
 data class Product(
     val id: Int,
@@ -9,7 +10,44 @@ data class Product(
     val value: Double,
     val quantity: Double,
     val type: String?
-)
+) {
+    companion object {
+        fun calculatePricePerUnit(price: String?, amount: String?): String {
+
+            // Check if both values are provided
+            if (price.isNullOrBlank() || amount.isNullOrBlank()) {
+                return "Error: Both values must be provided."
+            }
+
+            return try {
+                // Convert strings to doubles after trimming whitespace
+                val priceDouble = price.trim().toDouble()
+                val amountDouble = amount.trim().toDouble()
+
+                // Check for division by zero
+                if (amountDouble == 0.0) {
+                    "Error: Cannot divide by zero."
+                } else {
+                    // Perform the calculation and format the result with two decimal places
+                    val result = priceDouble / amountDouble
+                    String.format("%.2f", result)
+                }
+            } catch (e: NumberFormatException) {
+                "Error: Make sure to provide valid numeric values."
+            }
+        }
+    }
+}
+
+val SingleProductMock = Product(
+        110,
+        "Adega",
+        "Guaraná",
+        4.49,
+        1.5,
+        Constants.PRODUCT.TYPE.LITERS
+    )
+
 
 object ProductMock {
     val productList = listOf(

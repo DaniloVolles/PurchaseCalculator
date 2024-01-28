@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,41 +27,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.purchasecalculator.constants.Constants
 import com.example.purchasecalculator.model.Product
 import com.example.purchasecalculator.model.ProductMock
+import com.example.purchasecalculator.model.SingleProductMock
+import com.example.purchasecalculator.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var viewModel: ProductViewModel
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[ProductViewModel::class.java]
+
         setContent {
-            MyApp(this)
+            MyApp(this, viewModel)
         }
     }
 
-}
-
-@Composable
-fun ProductRowMock() {
-
-    val product = Product(
-        108,
-        "Assaí",
-        "Coca-Cola",
-        12.99,
-        3.0,
-        Constants.PRODUCT.TYPE.LITERS
-    )
-    ProductRow(product)
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAll()
+    }
 }
 
 @Composable
@@ -76,7 +77,10 @@ fun ProductRow(product: Product) {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(16.dp)
+            .clickable {
+
+            }
     ) {
         Column(
             Modifier
@@ -86,8 +90,10 @@ fun ProductRow(product: Product) {
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = name)
-                Text(text = type.toString())
+                Text(
+                    text = name,
+                    fontSize = 24.sp
+                )
             }
             Row(
                 Modifier.fillMaxWidth(),
@@ -96,16 +102,25 @@ fun ProductRow(product: Product) {
                 if (store != null) {
                     Text(text = store)
                 }
-                Text(text = value.toString())
-                Text(text = quantity.toString())
             }
 
         }
 
         Column(
-            Modifier.weight(1f)
+            Modifier.weight(1f),
+            horizontalAlignment = Alignment.End
         ) {
-            Text(text = pricePerUnit)
+            Row (
+                horizontalArrangement = Arrangement.End
+            ){
+                Text(
+                    text = pricePerUnit,
+                    fontSize = 24.sp
+                )
+            }
+            Row {
+                Text(text = "/$type")
+            }
         }
     }
 
@@ -114,11 +129,11 @@ fun ProductRow(product: Product) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewProductRow() {
-    ProductRowMock()
+    ProductRow(SingleProductMock)
 }
 
 @Composable
-fun MyApp(context: Context) {
+fun MyApp(context: Context, viewModel: ProductViewModel) {
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -158,7 +173,7 @@ fun MyApp(context: Context) {
         }
     ) { innerPadding ->
         LazyColumn(contentPadding = innerPadding) {
-            items(ProductMock.productList) {
+            items(viewModel.getAll()) {
                 ProductRow(product = it)
             }
         }
