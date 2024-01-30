@@ -15,32 +15,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.purchasecalculator.constants.Constants
 import com.example.purchasecalculator.model.Product
-import com.example.purchasecalculator.model.ProductMock
 import com.example.purchasecalculator.model.SingleProductMock
 import com.example.purchasecalculator.viewModel.ProductViewModel
-import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -65,8 +60,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProductRow(product: Product) {
+fun ProductRow(product: Product, viewModel: ProductViewModel? = null) {
 
+    val id = product.id
     val store = product.store
     val name = product.name
     val value = product.value
@@ -78,9 +74,7 @@ fun ProductRow(product: Product) {
         Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable {
-
-            }
+            .clickable { }
     ) {
         Column(
             Modifier
@@ -112,9 +106,9 @@ fun ProductRow(product: Product) {
             Modifier.weight(1f),
             horizontalAlignment = Alignment.End
         ) {
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
                 Text(
                     text = "R$ $pricePerUnit",
                     fontSize = 24.sp
@@ -137,20 +131,13 @@ fun PreviewProductRow() {
 @Composable
 fun MyApp(context: Context, viewModel: ProductViewModel) {
 
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Aqui será implementada a limpeza do BD.") }
-                    }) {
+                    IconButton(
+                        onClick = { deleteAll(viewModel) }
+                    ) {
                         Icon(
                             painterResource(id = R.drawable.ic_delete),
                             contentDescription = null
@@ -182,3 +169,41 @@ fun MyApp(context: Context, viewModel: ProductViewModel) {
     }
 }
 
+@Composable
+@Preview
+fun DeleteAlert() {
+    val shouldShowDialog = remember { mutableStateOf(true) }
+    if (shouldShowDialog.value) {
+        AlertDialog(
+            onDismissRequest = { shouldShowDialog.value = false },
+            title = { Text(text = "Delete?") },
+            text = { Text(text = "Do you wish to confirm the deletion of the items? This action cannot be undone.") },
+
+            confirmButton = {
+                Button(
+                    onClick = {
+                        shouldShowDialog.value = false
+
+                    }
+                ) {
+                    Text(text = "CONFIRM")
+                }
+            },
+
+            dismissButton = {
+                Button(
+                    onClick = {
+                        shouldShowDialog.value = false
+                    }
+                ) {
+                    Text(text = "CANCEL")
+                }
+            },
+        )
+
+    }
+}
+
+fun deleteAll(viewModel: ProductViewModel){
+    viewModel.deleteAll()
+}

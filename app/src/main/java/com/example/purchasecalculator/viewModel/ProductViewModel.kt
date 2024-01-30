@@ -22,4 +22,8 @@ class ProductViewModel(application: Application): AndroidViewModel(application) 
     fun delete(id: Int){
         repository.delete(id)
     }
+
+    fun deleteAll() {
+        repository.deleteAll()
+    }
 }

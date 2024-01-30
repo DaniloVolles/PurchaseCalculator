@@ -148,10 +148,20 @@ class ProductRepository private constructor(context: Context) {
     fun delete(id: Int): Boolean {
         return try {
             val db = productDataBase.writableDatabase
-            val selection = ID + " = ?"
+            val selection = "$ID = ?"
             val args = arrayOf(id.toString())
 
             db.delete(TABLE_NAME, selection, args)
+            true
+        } catch (e: Exception){
+            false
+        }
+    }
+
+    fun deleteAll(): Boolean {
+        return try {
+            val db = productDataBase.writableDatabase
+            db.delete(TABLE_NAME, null, null)
             true
         } catch (e: Exception){
             false
